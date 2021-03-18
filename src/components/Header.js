@@ -1,21 +1,16 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
 function Header({ isAuthenticated, login, logout }) {
   return (
     <header className="bg-light p-2">
       <nav className="container d-flex align-items-center">
-        <NavLink className="navbar-brand" to="/" exact activeClassName="active">
+        <a className="navbar-brand" href="/">
           Home
-        </NavLink>
+        </a>
         <div className="navbar navbar-expand">
-          <NavLink
-            className="nav-item nav-link"
-            to="/beers/find"
-            activeClassName="active"
-          >
+          <a className="nav-item nav-link" href="/beers/find">
             Find
-          </NavLink>
+          </a>
         </div>
         <div className="d-flex ml-auto">
           {isAuthenticated ? (
