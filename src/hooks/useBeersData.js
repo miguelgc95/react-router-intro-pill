@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useCallback } from "react";
 import axios from "axios";
 
 import AppReducer from "../reducers/app-reducer/app-reducer.js";
@@ -11,11 +11,11 @@ function useBeersData() {
     dispatch,
   ] = useReducer(AppReducer, AppInitialState);
 
-  function nextPage() {
+  const nextPage = useCallback(() => {
     dispatch({
       type: AppTypes.FETCH_NEXT_PAGE_REQUEST,
     });
-  }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;

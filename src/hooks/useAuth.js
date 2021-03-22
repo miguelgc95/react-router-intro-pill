@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function loadAuthState() {
   const authState = localStorage.getItem("authState");
@@ -15,17 +15,17 @@ function loadAuthState() {
 function useAuth() {
   const [authState, setAuthState] = useState(() => loadAuthState());
 
-  function login() {
+  const login = useCallback(() => {
     setAuthState({
       isAuthenticated: true,
     });
-  }
+  }, []);
 
-  function logout() {
+  const logout = useCallback(() => {
     setAuthState({
       isAuthenticated: false,
     });
-  }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("authState", JSON.stringify(authState));
