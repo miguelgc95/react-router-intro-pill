@@ -208,7 +208,20 @@ If the `beerId` is not found in memory, you should make a network request to fet
 
 ## Instructions: Context API
 
-`TODO`
+In this part of the pill you will have to implement the same functionality as before but using the Context API.
+
+### App Data Context
+
+You should store the list of beers that is fetched from the api in a `Context.Provider` that wraps the entire app. This way, any component that needs the data can fetch it using the `useContext(Context)` hook.
+
+### Auth State Context
+
+Another context you could use in this app is the provider that contains the authentication state of the app. This can also wrap the entire app of the branch that needs access to the authentication state.
+
+### Extra Steps 💯
+
+1. Handle the app state with the `useReducer()` hook for easier management of the different states of the app (`loading`, `error`, `data`, etc).
+2. Implement the entire logic using hooks 💯
 
 ## Instructions: Redux
 
