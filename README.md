@@ -225,7 +225,11 @@ Another context you could use in this app is the provider that contains the auth
 
 ## Instructions: Redux
 
-`TODO`
+In this part of the app you will have to refactor it so that it uses Redux for the state management. This means that you will need to stop using the Context API and store everything in the Redux Store. This includes both the beers and authentication data.
+
+For this part, you cannot use any Redux middlewares such as thunk for the data fetching logic, everything will be done using `dispatch` and async functions.
+
+We also recommend using Redux hooks but the `connect()` method is also allowed even though the Redux team recommends using hooks from now on.
 
 ## Resources
 
