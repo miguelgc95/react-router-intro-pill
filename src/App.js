@@ -52,7 +52,7 @@ function App() {
     <>
     <Header isAuthenticated={isAuthenticated} login={login} logout={logout} />
     <Switch>
-      <Route path='/find' component={Find} />{/* I think I should add some param to dthe URL */}
+      <Route path='/Beers/find' component={Find} />{/* I think I should add some param to dthe URL */}
       <ProtectedRoute isAuthenticated={isAuthenticated} path='/beerInfo/:beerId' component={BeerInfo} />{/* should I add to the URL where do the user came from?? */}
       <Route exact path='/' component={Home} />{/* I think I should add the current page param to the URL */}
       <Route path='*' component={NotFound} />
