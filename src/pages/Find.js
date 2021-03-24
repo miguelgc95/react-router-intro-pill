@@ -1,12 +1,8 @@
 import React from "react";
 
-import Header from "../components/Header";
-import BeerCard from "../components/BeerCard";
-
 function Find() {
   return (
     <div>
-      <Header />
       <main className="container mt-4">
         <section className="row mb-2">
           <div className="col">

@@ -14,7 +14,7 @@ function BeerInfo() {
             </div>
             <hr />
           </div>
-        </section>
+        </section>c
       </main>
     </div>
   );
