@@ -9,7 +9,7 @@ function Header({ isAuthenticated, login, logout }) {
 					Home
 				</NavLink>
 				<div className="navbar navbar-expand">
-					<NavLink className="nav-item nav-link" to="/beers/find">
+					<NavLink className="nav-item nav-link" to="/Beers/find">
 						Find
 					</NavLink>
 				</div>

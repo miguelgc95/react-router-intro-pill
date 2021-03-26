@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Find() {
+const [date, setDate] = useState('01/2000')
   return (
     <div>
       <main className="container mt-4">
@@ -9,7 +10,8 @@ function Find() {
             <div className="d-flex align-items-center">
               <h1 className="h3 m-0">Punk API Finder</h1>
             </div>
-            <hr />
+            <input onChange={(e) => setDate(e.target.value)} type='text' placeholder={`date format: ${date}`}></input>
+            <button>fetch beers brewed before {date}</button>
           </div>
         </section>
       </main>

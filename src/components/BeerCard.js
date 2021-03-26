@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 
 import BeerMeta from "./BeerMeta";
 
-function BeerCard({ beer }) {
+function BeerCard({ theBeer }) {
   return (
-    <div key={beer.id} className="col col-4">
+    <div key={theBeer.id} className="col col-4">
       <div className="border p-3 mb-3">
-        <Link to={`/beers/${beer.id}`}>
-          <h4 className="h6">{beer.name}</h4>
+        <Link to={`/beers/${theBeer.id}`}>
+          <h4 className="h6">{theBeer.name}</h4>
         </Link>
-        <p className="m-0">{beer.tagline}</p>
+        <p className="m-0">{theBeer.tagline}</p>
         <hr />
-        <BeerMeta ibu={beer.ibu} abv={beer.abv} ebc={beer.ebc} />
+        <BeerMeta ibu={theBeer.ibu} abv={theBeer.abv} ebc={theBeer.ebc} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState }from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Route, Switch } from "react-router";
 
 import Home from "./pages/Home";
@@ -8,6 +8,8 @@ import NotFound from "./pages/NotFound";
 
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+import fetchOnePageBeers from "./controllers/beersController";
 
 import "./App.scss";
 
@@ -31,10 +33,25 @@ function loadAuthState() {
 
 function App() {
 	const [authState, setAuthState] = useState(() => loadAuthState());
+	const [page, setPage] = useState(1);
+	const [beers, setBeers] = useState([]);
+
+	const cb = useCallback(async (page) => {
+		const fetchedBeers = await fetchOnePageBeers(page);
+		setBeers(fetchedBeers);
+	}, []);
+
+	useEffect(() => {
+		cb(page);
+	}, [page, cb]);
 
 	const { isAuthenticated } = authState;
 
 	useLocalStorage(authState);
+
+	if (false) {
+		setPage(2);
+	}
 
 	function login() {
 		setAuthState({
@@ -49,16 +66,29 @@ function App() {
 	}
 
 	return (
-    <>
-    <Header isAuthenticated={isAuthenticated} login={login} logout={logout} />
-    <Switch>
-      <Route path='/Beers/find' component={Find} />{/* I think I should add some param to dthe URL */}
-      <ProtectedRoute isAuthenticated={isAuthenticated} path='/beerInfo/:beerId' component={BeerInfo} />{/* should I add to the URL where do the user came from?? */}
-      <Route exact path='/' component={Home} />{/* I think I should add the current page param to the URL */}
-      <Route path='*' component={NotFound} />
-    </Switch>
-    </>
-  );
+		<>
+			<Header
+				isAuthenticated={isAuthenticated}
+				login={login}
+				logout={logout}
+			/>
+			<Switch>
+				<Route path="/Beers/find">
+					<Find />
+				</Route>
+				<ProtectedRoute
+					isAuthenticated={isAuthenticated}
+					path="/beers/:beerId"
+				>
+					<BeerInfo beers={beers} />
+				</ProtectedRoute>
+				<Route exact path="/">
+					<Home beers={beers} page={page} handleSetPage={setPage} />
+				</Route>
+				<Route path="*" component={NotFound} />
+			</Switch>
+		</>
+	);
 }
 
 export default App;
