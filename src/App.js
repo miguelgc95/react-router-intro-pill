@@ -9,7 +9,7 @@ import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-import fetchOnePageBeers from "./controllers/beersController";
+import { controllerFunctions } from "./controllers";
 
 import "./App.scss";
 
@@ -37,7 +37,7 @@ function App() {
 	const [beers, setBeers] = useState([]);
 
 	const cb = useCallback(async (page) => {
-		const fetchedBeers = await fetchOnePageBeers(page);
+		const fetchedBeers = await controllerFunctions.fetchOnePageBeers(page);
 		setBeers(fetchedBeers);
 	}, []);
 
@@ -48,10 +48,6 @@ function App() {
 	const { isAuthenticated } = authState;
 
 	useLocalStorage(authState);
-
-	if (false) {
-		setPage(2);
-	}
 
 	function login() {
 		setAuthState({

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 
 import BeerCard from "../components/BeerCard";
 
-import { fetchLastBeer } from "../controllers/beersController";
+import { controllerFunctions } from "../controllers";
 
 import "./Home.scss";
 
@@ -12,7 +12,7 @@ function Home({ beers, page, handleSetPage }) {
 	const checkLastBeer = useCallback(async () => {
 		if (beers.length > 0) {
 			let id = beers[beers.length - 1].id + 1;
-			var fetchedBool = await fetchLastBeer(id);
+			var fetchedBool = await controllerFunctions.fetchLastBeer(id);
 			setThereAreMoreBeers(fetchedBool[0] ? true : false);
 		}
 	}, [beers]);
@@ -44,8 +44,10 @@ function Home({ beers, page, handleSetPage }) {
 								next
 							</button>
 						</div>
-						{beers.map((beer) => <BeerCard theBeer={beer} />)}
 					</div>
+					{beers.map((beer) => (
+						<BeerCard theBeer={beer} />
+					))}
 				</section>
 			</main>
 		</div>

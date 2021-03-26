@@ -12,10 +12,21 @@ function fetchOnePageBeers(page) {
 function fetchLastBeer(id) {
 	const url = `https://api.punkapi.com/v2/beers/${id}`;
 	return fetch(url)
-	.then((response) => {
-		return response.json();
-	}).catch(e => e.preventDefault())
+		.then((response) => {
+			return response.json();
+		})
+		.catch((e) => e.preventDefault());
 }
 
-export default fetchOnePageBeers;
-export { fetchLastBeer };
+function fetchBrewedBeers(date) {
+	const url = `https://api.punkapi.com/v2/beers?brewed_after=${date}`;
+	return fetch(url)
+	.then((response) => {
+		return response.json();
+	})
+	.then((data) => {
+		return data;
+	});
+}
+
+export { fetchOnePageBeers, fetchLastBeer, fetchBrewedBeers };
