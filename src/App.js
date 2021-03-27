@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Route, Switch } from "react-router";
 
-import useAuthCustomHook from './hooks/authCustomHook';
+import useAuthCustomHook from "./hooks/authCustomHook";
 
 import Home from "./pages/Home";
 import BeerInfo from "./pages/BeerInfo";
@@ -15,10 +15,13 @@ import { controllerFunctions } from "./controllers";
 
 import "./App.scss";
 
+export const AuthContext = createContext();
+export const BeersContext = createContext();
+
 function App() {
 	const [page, setPage] = useState(1);
 	const [beers, setBeers] = useState([]);
-	const { isAuthenticated, login, logout} = useAuthCustomHook(false)
+	const { isAuthenticated, login, logout } = useAuthCustomHook(false);
 
 	const cb = useCallback(async (page) => {
 		const fetchedBeers = await controllerFunctions.fetchOnePageBeers(page);
@@ -31,26 +34,23 @@ function App() {
 
 	return (
 		<>
-			<Header
-				isAuthenticated={isAuthenticated}
-				login={login}
-				logout={logout}
-			/>
-			<Switch>
-				<Route path="/Beers/find">
-					<Find />
-				</Route>
-				<ProtectedRoute
-					isAuthenticated={isAuthenticated}
-					path="/beers/:beerId"
-				>
-					<BeerInfo beers={beers} />
-				</ProtectedRoute>
-				<Route exact path="/">
-					<Home beers={beers} page={page} handleSetPage={setPage} />
-				</Route>
-				<Route path="*" component={NotFound} />
-			</Switch>
+			<AuthContext.Provider value={isAuthenticated}>
+				<Header login={login} logout={logout} />
+				<Switch>
+					<Route path="/Beers/find">
+						<Find />
+					</Route>
+					<BeersContext.Provider value={beers}>
+						<ProtectedRoute path="/beers/:beerId">
+							<BeerInfo />
+						</ProtectedRoute>
+						<Route exact path="/">
+							<Home page={page} handleSetPage={setPage} />
+						</Route>
+					</BeersContext.Provider>
+					<Route path="*" component={NotFound} />
+				</Switch>
+			</AuthContext.Provider>
 		</>
 	);
 }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 
 import BeerCard from "../components/BeerCard";
 
@@ -6,7 +6,10 @@ import { controllerFunctions } from "../controllers";
 
 import "./Home.scss";
 
-function Home({ beers, page, handleSetPage }) {
+import { BeersContext } from "../App";
+
+function Home({ page, handleSetPage }) {
+	const beers = useContext(BeersContext);
 	const [thereAreMoreBeers, setThereAreMoreBeers] = useState(true);
 
 	const checkLastBeer = useCallback(async () => {

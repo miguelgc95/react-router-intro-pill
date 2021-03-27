@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import BeerAdditionalInfo from "../components/BeerAdditionalInfo";
 
-function BeerInfo({ beers }) {
+import {BeersContext} from '../App'
+
+function BeerInfo() {
+	const beers = useContext(BeersContext);
 	const { beerId } = useParams();
 	const myBeer = beers.find((beer) => beer.id === parseInt(beerId));
 	return (
