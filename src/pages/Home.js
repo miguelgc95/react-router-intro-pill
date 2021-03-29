@@ -6,23 +6,25 @@ import { controllerFunctions } from "../controllers";
 
 import "./Home.scss";
 
-import { BeersContext } from "../App";
+import { GlobalContext } from "../App";
 
-function Home({ page, handleSetPage }) {
-	const beers = useContext(BeersContext);
+import { ACTIONS } from '../App'
+
+function Home({ dispatch }) {
+	const state = useContext(GlobalContext);
 	const [thereAreMoreBeers, setThereAreMoreBeers] = useState(true);
 
 	const checkLastBeer = useCallback(async () => {
-		if (beers.length > 0) {
-			let id = beers[beers.length - 1].id + 1;
+		if (state.beers.length > 0) {
+			let id = state.beers[state.beers.length - 1].id + 1;
 			var fetchedBool = await controllerFunctions.fetchLastBeer(id);
 			setThereAreMoreBeers(fetchedBool[0] ? true : false);
 		}
-	}, [beers]);
+	}, [state.beers]);
 
 	useEffect(() => {
 		checkLastBeer();
-	}, [beers, checkLastBeer]);
+	}, [state.beers, checkLastBeer]);
 
 	return (
 		<div>
@@ -34,22 +36,22 @@ function Home({ page, handleSetPage }) {
 						</div>
 						<div>
 							<button
-								disabled={page === 1 ? true : false}
-								onClick={() => handleSetPage(page - 1)}
+								disabled={state.page === 1 ? true : false}
+								onClick={() => dispatch({type: ACTIONS.DECREMENT_PAGE})}
 							>
 								prev
 							</button>
-							<span className="margin">{page}</span>
+							<span className="margin">{state.page}</span>
 							<button
 								disabled={!thereAreMoreBeers}
-								onClick={() => handleSetPage(page + 1)}
+								onClick={() => dispatch({type: ACTIONS.INCREMENT_PAGE})}
 							>
 								next
 							</button>
 						</div>
 					</div>
-					{beers.map((beer) => (
-						<BeerCard theBeer={beer} />
+					{state.beers.map((beer) => (
+						<BeerCard key={beer.id} theBeer={beer} />
 					))}
 				</section>
 			</main>

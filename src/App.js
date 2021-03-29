@@ -1,7 +1,5 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { useEffect, useReducer, createContext } from "react";
 import { Route, Switch } from "react-router";
-
-import useAuthCustomHook from "./hooks/authCustomHook";
 
 import Home from "./pages/Home";
 import BeerInfo from "./pages/BeerInfo";
@@ -15,42 +13,113 @@ import { controllerFunctions } from "./controllers";
 
 import "./App.scss";
 
-export const AuthContext = createContext();
-export const BeersContext = createContext();
+export const ACTIONS = {
+	INCREMENT_PAGE: "incrementPage",
+	DECREMENT_PAGE: "decrementPage",
+	FETCH_BEERS_LOADING: "loadingFetchBeers",
+	FETCH_BEERS_SUCCES: "succesFetchBeers",
+	FETCH_BEERS_ERROR: "errorFetchBeers",
+	LOGIN: "login",
+	LOGOUT: "logout",
+};
+
+export const GlobalContext = createContext();
+
+function reducer(state, action) {
+	switch (action.type) {
+		case ACTIONS.INCREMENT_PAGE:
+			return {
+				...state,
+				page: state.page + 1,
+			};
+		case ACTIONS.DECREMENT_PAGE:
+			return {
+				...state,
+				page: state.page - 1,
+			};
+		case ACTIONS.FETCH_BEERS_LOADING:
+			console.log("loading...");
+			return state;
+		case ACTIONS.FETCH_BEERS_SUCCES:
+			return {
+				...state,
+				beers: action.payload,
+			};
+		case ACTIONS.FETCH_BEERS_ERROR:
+			console.log("something went wrong");
+			return state;
+		case ACTIONS.LOGIN:
+			return {
+				...state,
+				isAuthenticated: true,
+			};
+		case ACTIONS.LOGOUT:
+			return {
+				...state,
+				isAuthenticated: false,
+			};
+		default:
+			break;
+	}
+}
+
+function loadAuthState() {
+	const authState = localStorage.getItem("authState");
+
+	if (authState === null) {
+		return {
+			isAuthenticated: false,
+		};
+	}
+
+	return JSON.parse(authState);
+}
 
 function App() {
-	const [page, setPage] = useState(1);
-	const [beers, setBeers] = useState([]);
-	const { isAuthenticated, login, logout } = useAuthCustomHook(false);
 
-	const cb = useCallback(async (page) => {
-		const fetchedBeers = await controllerFunctions.fetchOnePageBeers(page);
-		setBeers(fetchedBeers);
-	}, []);
+	const initState = {
+		page: 1,
+		beers: [],
+		isAuthenticated: loadAuthState(),
+	};
+
+	const [state, dispatch] = useReducer(reducer, initState);
 
 	useEffect(() => {
-		cb(page);
-	}, [page, cb]);
+		fetchBeers(state.page);
+	}, [state.page]);
+
+	useEffect(() => {
+		localStorage.setItem("authState", JSON.stringify(state.isAuthenticated));
+	}, [state.isAuthenticated]);
+
+	const fetchBeers = async (page) => {
+		dispatch({ type: ACTIONS.FETCH_BEERS_LOADING });
+		const beers = await controllerFunctions.fetchOnePageBeers(page);
+		try {
+			dispatch({ type: ACTIONS.FETCH_BEERS_SUCCES, payload: beers });
+		} catch (e) {
+			dispatch({ type: ACTIONS.FETCH_BEERS_ERROR });
+		}
+	};
 
 	return (
 		<>
-			<AuthContext.Provider value={isAuthenticated}>
-				<Header login={login} logout={logout} />
+			<GlobalContext.Provider value={state}>
+				<Header dispatch={dispatch} />
 				<Switch>
 					<Route path="/Beers/find">
 						<Find />
 					</Route>
-					<BeersContext.Provider value={beers}>
-						<ProtectedRoute path="/beers/:beerId">
-							<BeerInfo />
-						</ProtectedRoute>
-						<Route exact path="/">
-							<Home page={page} handleSetPage={setPage} />
-						</Route>
-					</BeersContext.Provider>
+					<ProtectedRoute path="/beers/:beerId">
+						<BeerInfo />
+					</ProtectedRoute>
+					<Route exact path="/">
+						<Home dispatch={dispatch} />
+					</Route>
 					<Route path="*" component={NotFound} />
 				</Switch>
-			</AuthContext.Provider>
+			</GlobalContext.Provider>
 		</>
 	);
 }

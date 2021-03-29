@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import {AuthContext} from '../App'
+import {GlobalContext} from '../App'
 
 
 function ProtectedRoute({ ...props }) {
-	const isAuthenticated = useContext(AuthContext)
+	const state = useContext(GlobalContext)
 
-  return isAuthenticated ? <Route {...props} /> : <Redirect to="/" />;
+  return state.isAuthenticated ? <Route {...props} /> : <Redirect to="/" />;
 }
 
 export default ProtectedRoute;

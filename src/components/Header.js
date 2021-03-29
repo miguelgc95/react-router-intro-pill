@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
-import {AuthContext} from '../App.js'
+import {GlobalContext} from '../App.js'
 
-function Header({ login, logout }) {
-	const isAuthenticated = useContext(AuthContext)
+import { ACTIONS } from '../App'
+
+function Header({ dispatch }) {
+	const state = useContext(GlobalContext)
 	return (
 		<header className="bg-light p-2">
 			<nav className="container d-flex align-items-center">
@@ -17,18 +19,21 @@ function Header({ login, logout }) {
 					</NavLink>
 				</div>
 				<div className="d-flex ml-auto">
-					{isAuthenticated ? (
+					{state.isAuthenticated ? (
 						<div className="d-flex align-items-center">
 							<p className="mb-0 mr-3">Hello!</p>
 							<button
 								className="btn btn-primary"
-								onClick={logout}
+								onClick={() => dispatch({type: ACTIONS.LOGOUT})}
 							>
 								Logout
 							</button>
 						</div>
 					) : (
-						<button className="btn btn-primary" onClick={login}>
+						<button
+						className="btn btn-primary"
+						onClick={() => dispatch({type: ACTIONS.LOGIN})}
+						>
 							Login
 						</button>
 					)}

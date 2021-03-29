@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import BeerAdditionalInfo from "../components/BeerAdditionalInfo";
 
-import {BeersContext} from '../App'
+import {GlobalContext} from '../App'
 
 function BeerInfo() {
-	const beers = useContext(BeersContext);
+	const state = useContext(GlobalContext);
 	const { beerId } = useParams();
-	const myBeer = beers.find((beer) => beer.id === parseInt(beerId));
+	const myBeer = state.beers.find((beer) => beer.id === parseInt(beerId));
 	return (
 		<div>
 			<main className="container mt-4">
