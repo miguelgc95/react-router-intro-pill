@@ -119,7 +119,7 @@ function App() {
 					</Route>
 					<Route path="*" component={NotFound} />
 				</Switch>
-			</GlobalContext.Provider>
+			</GlobalContext.Provider>8rtsdss
 		</>
 	);
 }
